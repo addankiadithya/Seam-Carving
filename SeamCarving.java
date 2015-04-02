@@ -12,6 +12,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -57,26 +58,8 @@ public class SeamCarving {
                 else
                 	// if given hseams is greater than height
                 	throw new Exception("Not enough hseams to remove");
-                ArrayList<ArrayList<Integer>> al=(ArrayList<ArrayList<Integer>>)(il.ar.clone());
-
-                // Save the processed image after removing horizontal and vertical seams
-                FileWriter fw=new FileWriter(il.fname.substring(0,il.fname.
-                					indexOf(".pgm"))+"_processed_"+il.vseams+"_"+il.
-                						hseams+".pgm");
-        		PrintWriter pw=new PrintWriter(fw);
-        		pw.print(il.header);
-        		pw.println(al.get(0).size()+"  "+al.size());
-        		pw.println(il.maxpix);
-        		for (ArrayList<Integer> a : al) {
-        			for (Integer p : a)
-        			{
-        				pw.print(p + "\t");
-        			}
-        			pw.println();
-        		}
-        		
-        		fw.close();
-        		System.out.println("Done Processing on: "+args[0]);
+                System.out.println("Done Processing on: "+args[0]);
+                ImgLoad.saveImage(il);
         		long endTime=System.currentTimeMillis();
         		long millis=endTime-startTime;
         		long second = (millis / 1000) % 60;
@@ -369,6 +352,28 @@ class ImgLoad
         {
         	System.out.println("File not found");
         }
+    }
+    @SuppressWarnings("unchecked")
+    public static void saveImage(ImgLoad il) throws IOException
+    {
+    	ArrayList<ArrayList<Integer>> al=(ArrayList<ArrayList<Integer>>)(il.ar.clone());
+
+                // Save the processed image after removing horizontal and vertical seams
+                FileWriter fw=new FileWriter(il.fname.substring(0,il.fname.
+                					indexOf(".pgm"))+"_processed_"+il.vseams+"_"+il.
+                						hseams+".pgm");
+        		PrintWriter pw=new PrintWriter(fw);
+        		pw.print(il.header);
+        		pw.println(al.get(0).size()+"  "+al.size());
+        		pw.println(il.maxpix);
+        		for (ArrayList<Integer> a : al) {
+        			for (Integer p : a)
+        			{
+        				pw.print(p + "\t");
+        			}
+        			pw.println();
+        		}        		
+        		fw.close();
     }
 
     // Only used for debugging, prints the arraylist in matrix format
